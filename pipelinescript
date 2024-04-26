@@ -1,0 +1,70 @@
+@Library('mylibrary')_
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('cont down')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.gitdownload("maven")
+                }
+            }
+        }
+        stage('cont build')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.build()
+                }
+            }
+        }
+        stage('cont deploy')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.deploy("DeclarativePipelineSharedLibraries","172.31.5.63","Testapp")
+                }
+            }
+        }
+        stage('cont testing')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.gitdownload("functionaltesting")
+                }
+            }
+        }
+        stage('cont run')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.run("DeclarativePipelineSharedLibraries")
+                }
+            }
+        }
+        stage('cont delivery')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.deploy("DeclarativePipelineSharedLibraries","172.31.3.151","Prodapp")
+                }
+            }
+        }
+        
+        
+    }
+}
