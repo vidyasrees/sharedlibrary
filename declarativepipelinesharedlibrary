@@ -1,0 +1,59 @@
+@Library('library')_
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('ContinuousDownload')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newGit("maven")
+                }
+            }
+        }
+        stage('ContinuousBuild')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newMaven()
+                }
+            }
+        }
+        stage('ContinuousDeployment')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newDeploy("DeclarativePipelineSharedLibraries1","172.31.13.241","testapp")
+                }
+            }
+        }
+        stage('ContinuousTesting')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newGit("functionaltesting")
+                    cicd.runSelenium("DeclarativePipelineSharedLibraries1")
+                }
+            }
+        }
+        stage('ContinuousDelivery')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newDeploy("DeclarativePipelineSharedLibraries1","172.31.10.80","prodapp")
+                }
+            }
+        }
+    }
+}
